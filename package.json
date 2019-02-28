@@ -1,0 +1,33 @@
+{
+  "name": "udu-logger",
+  "version": "1.0.0",
+  "description": "A simple logging package built for Elasticsearch",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MatthewCrocker7/udu-logger.git"
+  },
+  "keywords": [
+    "logger"
+  ],
+  "author": "Matthew Crocker",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MatthewCrocker7/udu-logger/issues"
+  },
+  "homepage": "https://github.com/MatthewCrocker7/udu-logger#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^5.14.1",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-react": "^7.12.4"
+  }
+}
