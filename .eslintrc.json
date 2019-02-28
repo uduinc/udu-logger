@@ -2,6 +2,7 @@
     "env": {
         "browser": true,
         "commonjs": true,
+        "node": true,
         "es6": true
     },
     "extends": "airbnb",
@@ -19,5 +20,7 @@
         "react"
     ],
     "rules": {
+        "no-console": "off",
+        "comma-dangle": "off"
     }
 }
