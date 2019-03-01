@@ -22,7 +22,9 @@
     "url": "https://github.com/MatthewCrocker7/udu-logger/issues"
   },
   "homepage": "https://github.com/MatthewCrocker7/udu-logger#readme",
-  "dependencies": {},
+  "dependencies": {
+    "moment": "^2.24.0"
+  },
   "devDependencies": {
     "eslint": "^5.14.1",
     "eslint-config-airbnb": "^17.1.0",

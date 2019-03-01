@@ -14,13 +14,14 @@
         "ecmaFeatures": {
             "jsx": true
         },
-        "ecmaVersion": 2018
+        "ecmaVersion": 2018    
     },
     "plugins": [
         "react"
     ],
     "rules": {
         "no-console": "off",
-        "comma-dangle": "off"
+        "comma-dangle": "off",
+        "func-names": ["error", "as-needed"]
     }
 }
