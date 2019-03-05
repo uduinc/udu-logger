@@ -1,19 +1,22 @@
-const log = require('../index');
+const udu = require('../index');
 
 
-const dataLogger = log.createUduLogger({
-  filePath: 'test/logs/data.txt'
+const dataLogger = udu.createUduLogger({
+  filePath: 'test/logs/data.txt',
+  timeFormat: 'MM/DD/YYYY',
+  elasticConfig: {
+    host: 'localhost:9200',
+    index: 'customer',
+    type: 'mytype'
+  }
 });
-const errorLogger = log.createUduLogger({
+const errorLogger = udu.createUduLogger({
   filePath: 'test/logs/error.txt'
 });
 
 
 setTimeout(async () => {
-  dataLogger.logOutput('success');
+  dataLogger.log('success');
 }, 500);
-errorLogger.logOutput('error');
-errorLogger.logOutput('bad error');
-dataLogger.logOutput('success-2');
-
-dataLogger.logOutput('success-3');
+errorLogger.log('error');
+errorLogger.log('bad error');
