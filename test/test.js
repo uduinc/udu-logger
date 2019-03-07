@@ -10,13 +10,17 @@ const dataLogger = udu.createUduLogger({
     type: 'mytype'
   }
 });
-const errorLogger = udu.createUduLogger({
-  filePath: 'test/logs/error.txt'
+const logger = udu.createUduLogger({
+  timeFormat: 'MM/DD/YYYY',
+  filePath: 'test/logs/data.log'
 });
 
 
-setTimeout(async () => {
+/* setTimeout(async () => {
   dataLogger.log('success');
-}, 500);
-errorLogger.log('error');
-errorLogger.log('bad error');
+}, 500); */
+logger.log('here is some data');
+logger.error('data gave error');
+// errorLogger.log('bad error');
+// dataLogger.log('success - 2');
+// dataLogger.log('success - 3');
