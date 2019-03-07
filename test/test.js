@@ -12,7 +12,9 @@ const dataLogger = udu.createUduLogger({
 });
 const logger = udu.createUduLogger({
   timeFormat: 'MM/DD/YYYY',
-  filePath: 'test/logs/data.log'
+  transports: [
+    new udu.transports.File({ filePath: 'test/logs/data.log' }),
+  ]
 });
 
 
