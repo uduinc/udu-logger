@@ -1,6 +1,7 @@
 const udu = require('../index');
 
 const logger = udu.createUduLogger({
+  level: 'log',
   timeFormat: 'MM/DD/YYYY kk:mm:ss',
   metaData: {
     header1: 'test1',
@@ -9,6 +10,7 @@ const logger = udu.createUduLogger({
   transports: [
     new udu.Transports.File({ filePath: 'test/logs/data.log' }),
     new udu.Transports.File({
+      level: 'error',
       filePath: 'test/logs/errors.log',
       metaConfig: {
         timeFormat: 'MM/DD/YYYY kk:mm:ss.SSS',
@@ -16,8 +18,8 @@ const logger = udu.createUduLogger({
           fileHeader: 'fileHeader1',
         },
       }
-    }),
-    new udu.Transports.Elastic({
+    })
+    /* new udu.Transports.Elastic({
       host: '127.0.0.1:9200',
       index: 'engineers',
       type: '_doc',
@@ -27,10 +29,11 @@ const logger = udu.createUduLogger({
           admin: 'Matthew',
         },
       }
-    })
+    }) */
   ]
 });
 logger.addTransport(new udu.Transports.Console({
+  level: 'warning',
   metaConfig: {
     timeFormat: 'MM/DD/YYYY',
     metaData: {
