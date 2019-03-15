@@ -8,7 +8,7 @@ const logger = udu.createUduLogger({
     header2: 'test2'
   },
   transports: [
-    new udu.Transports.File({ filePath: 'test/logs/data.log' }),
+    new udu.Transports.File({ level: 'info', filePath: 'test/logs/data.log' }),
     new udu.Transports.File({
       level: 'error',
       filePath: 'test/logs/errors.log',
@@ -18,8 +18,9 @@ const logger = udu.createUduLogger({
           fileHeader: 'fileHeader1',
         },
       }
-    })
-    /* new udu.Transports.Elastic({
+    }),
+    new udu.Transports.Elastic({
+      level: 'error',
       host: '127.0.0.1:9200',
       index: 'engineers',
       type: '_doc',
@@ -29,7 +30,7 @@ const logger = udu.createUduLogger({
           admin: 'Matthew',
         },
       }
-    }) */
+    })
   ]
 });
 logger.addTransport(new udu.Transports.Console({
