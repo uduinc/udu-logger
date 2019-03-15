@@ -48,3 +48,6 @@ const searchSpecific = async () => {
 // console.log(searchSpecific());
 // console.log(searchAll());
 // console.log(deleteAll());
+
+searchAll();
+// deleteAll();
