@@ -6,7 +6,7 @@ const client = new elasticsearch.Client({
   apiVersion: '6.6'
 });
 
-  // Delete's all documents
+// Delete's all documents
 const deleteAll = async () => {
   client.deleteByQuery({
     index: 'engineers',
