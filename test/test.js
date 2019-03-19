@@ -20,7 +20,7 @@ const logger = udu.createUduLogger({
         fileHeader: 'fileHeader1',
       },
     }),
-    new udu.Transports.Elastic({
+    /* new udu.Transports.Elastic({
       level: 'error',
       host: '127.0.0.1:9200',
       index: 'engineers',
@@ -29,7 +29,7 @@ const logger = udu.createUduLogger({
       metadata: {
         admin: 'Matthew',
       },
-    })
+    }) */
   ]
 });
 logger.addTransport(new udu.Transports.Console({
