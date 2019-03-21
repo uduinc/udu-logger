@@ -50,4 +50,4 @@ const searchSpecific = async () => {
 // console.log(deleteAll());
 
 searchAll();
-// deleteAll();
+deleteAll();
