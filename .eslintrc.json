@@ -3,7 +3,8 @@
         "browser": true,
         "commonjs": true,
         "node": true,
-        "es6": true
+        "es6": true,
+        "mocha": true
     },
     "extends": "airbnb",
     "globals": {
@@ -17,7 +18,8 @@
         "ecmaVersion": 2018    
     },
     "plugins": [
-        "react"
+        "react",
+        "mocha"
     ],
     "rules": {
         "no-console": "off",

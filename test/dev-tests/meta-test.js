@@ -1,4 +1,4 @@
-const udu = require('../index');
+const udu = require('../../index');
 
 const logger = udu.createUduLogger({
   level: 'log',
