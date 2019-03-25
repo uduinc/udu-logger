@@ -8,6 +8,11 @@ const logger = udu.createUduLogger({
   },
   transports: [
     new udu.Transports.Console({}),
+    new udu.Transports.Elastic({
+      host: '127.0.0.1:9200',
+      index: 'engineers',
+      type: '_doc',
+    })
   ]
 });
 
