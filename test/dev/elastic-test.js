@@ -30,14 +30,14 @@ const searchAll = async () => {
 
 
 // Specific search
-const searchSpecific = async () => {
+const searchSpecific = async (text) => {
   const response = await client.search({
     index: 'engineers',
     type: '_doc',
     body: {
       query: {
-        match: {
-          metaData: 'admin'
+        wildcard: {
+          message: text
         }
       }
     }
@@ -49,5 +49,6 @@ const searchSpecific = async () => {
 // console.log(searchAll());
 // console.log(deleteAll());
 
+searchSpecific('test');
 // searchAll();
 // deleteAll();
