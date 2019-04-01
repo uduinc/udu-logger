@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/MatthewCrocker7/udu-logger#readme",
   "dependencies": {
+    "bodybuilder": "^2.2.17",
     "elasticsearch": "^15.4.1",
     "moment": "^2.24.0"
   },

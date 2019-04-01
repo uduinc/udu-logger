@@ -8,11 +8,6 @@ const logger = udu.createUduLogger({
   },
   transports: [
     new udu.Transports.Console({}),
-    new udu.Transports.Elastic({
-      host: '127.0.0.1:9200',
-      index: 'engineers',
-      type: '_doc',
-    })
   ]
 });
 
@@ -25,3 +20,9 @@ logger2.meta({ source: 'notudu' }).log('test2');
 logger2.log('test3');
 
 logger.log('test4');
+
+logger.log({
+  metadata: {
+    user: 'Matthew'
+  }
+}, 'test');
