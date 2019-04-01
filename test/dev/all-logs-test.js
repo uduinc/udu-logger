@@ -1,7 +1,7 @@
 const udu = require('../../index');
 
 const logger = udu.createUduLogger({
-  level: 'log',
+  level: 'error',
   timeFormat: 'MM/DD/YYYY kk:mm:ss',
   logLimit: 50,
   logLimitLevel: 'warning',
@@ -9,12 +9,14 @@ const logger = udu.createUduLogger({
     user: 'Matthew'
   },
   transports: [
-    new udu.Transports.Console({}),
-    /* new udu.Transports.Elastic({
+    new udu.Transports.Console({
+      level: 'error'
+    }),
+    new udu.Transports.Elastic({
       host: '127.0.0.1:9200',
       index: 'engineers',
       type: '_doc',
-    }) */
+    })
   ]
 });
 
@@ -31,18 +33,25 @@ console.log('This is a simple object', { a: 1, b: 2 });
 console.log('null =', null, 'and undefined =', undefined, '\n\tand true =', true, 'and NaN =', NaN);
 console.log('port:', 80);
 */
-logger.log('Starting logging');
-logger.log('This machine\'s hostname:', require('os').hostname());
 
-logger.log('Error test:', new Error('testing'));
-logger.log(Array);
-logger.log(require('fs'));
-logger.log(JSON.stringify(require('fs'), null, 4));
+const testAllLogs = async () => {
+  logger.log('Starting logging');
+  logger.log('This machine\'s hostname:', require('os').hostname());
 
-logger.info('This is a simple object', { a: 1, b: 2 });
-logger.warn('null =', null, 'and undefined =', undefined, '\n\tand true =', true, 'and NaN =', NaN);
-logger.error('port:', 80);
-logger.log('abcdefghijklmnopqrstuvwxyz');
+  logger.log('Error test:', new Error('testing'));
+  logger.log(Array);
+  logger.log(require('fs'));
+  logger.log(JSON.stringify(require('fs'), null, 4));
+
+  logger.info('This is a simple object', { a: 1, b: 2 });
+  logger.warn('null =', null, 'and undefined =', undefined, '\n\tand true =', true, 'and NaN =', NaN);
+  const test = await logger.error('port:', 80);
+  logger.log('abcdefghijklmnopqrstuvwxyz');
+
+  console.log(test);
+};
+
+testAllLogs();
 
 // const str = 'AAA'.repeat(30000);
 
