@@ -1,4 +1,5 @@
 const assert = require('assert');
+const moment = require('moment');
 const udu = require('../index');
 
 
@@ -9,6 +10,7 @@ describe('Test Elasticsearch Transport functions', () => {
     type: '_doc',
     index: indexName
   });
+  
 
   describe('Create an Elasticsearch index test', () => {
     it('Should create a new test index', async () => {
@@ -29,7 +31,18 @@ describe('Test Elasticsearch Transport functions', () => {
     ]
   });
 
+  const timeFormat1 = 'MM/DD/YYYY kk:mm:ss.SSS';
+  const times1 = [];
+  const timeFormat2 = 'MM/DD/YYYY';
+  const times2 = [];
   describe('Logging to Elasticsearch test', () => {
+    beforeEach((done) => {
+      setTimeout(() => {
+        times1.push(moment().format(timeFormat1));
+        times2.push(moment().format(timeFormat2));
+        done();
+      }, 100);
+    });
     const logger2 = logger.meta({ alpha: 'a ' });
     it('Logging test1', async () => {
       const test = await logger.log('test');
@@ -72,9 +85,10 @@ describe('Test Elasticsearch Transport functions', () => {
     });
   });
 
-  describe('Basic Elastic searching tests', () => {
+  describe('Elastic searching tests - basic', () => {
     before((done) => {
       setTimeout(() => {
+        // console.log('Test ISO: ', new Date('12/25 20:00').toISOString());
         done();
       }, 1500);
     });
@@ -129,7 +143,7 @@ describe('Test Elasticsearch Transport functions', () => {
     });
   });
 
-  describe('Nested Elastic searching tests', () => {
+  describe('Elastic searching tests - nested', () => {
     it('Test "or" nested functionality - should return 3', async () => {
       const query = [
         { key: 'message', value: 'test', exact: true },
@@ -141,11 +155,7 @@ describe('Test Elasticsearch Transport functions', () => {
         }
       ];
       const output = await logger.search(query);
-      /*
-      output[0].hits.hits.forEach((x) => {
-        console.log(x._source);
-      });
-      */
+
       assert.equal(output[0].hits.total, 3);
     });
     it('Test "and" nested functionality - should return 3', async () => {
@@ -200,23 +210,70 @@ describe('Test Elasticsearch Transport functions', () => {
     });
   });
 
+  describe('Elastic searching tests - date range', () => {
+    it('Search within a given time range and nest queries - should return 3', async () => {
+      const startTime = times1[0];
+      const endTime = times1[5];
+
+      const query = [
+        { time: { start: startTime, end: endTime } },
+        {
+          and: [
+            { key: 'level', value: 'error', },
+            { key: 'level', value: 'warning', },
+          ]
+        }
+      ];
+      const output = await logger.search(query);
+
+      assert.equal(output[0].hits.total, 3);
+    });
+    it('Search to current time if no end time given - should return 6', async () => {
+      const endTime = times1[5];
+
+      const query = [
+        { time: { end: endTime } },
+      ];
+      const output = await logger.search(query);
+
+      assert.equal(output[0].hits.total, 6);
+    });
+    it('Search up to 1 day prior if no start time given - should return 6', async () => {
+      const startTime = times1[0];
+
+      const query = [
+        { time: { start: startTime } },
+      ];
+      const output = await logger.search(query);
+
+      assert.equal(output[0].hits.total, 6);
+    });
+    it('Should search over last 24 hours if no times given - should return 6', async () => {
+      const query = [
+        { time: { } },
+      ];
+      const output = await logger.search(query);
+
+      assert.equal(output[0].hits.total, 6);
+    });
+    it('Should handle differing date formats - should return 6', async () => {
+      const startTime = times2[0]; // MM/DD/YYYY format
+      const endTime = Date.now(); // Returns epoch time in ms
+      const query = [
+        { time: { start: startTime, end: endTime } },
+      ];
+      const output = await logger.search(query);
+
+      assert.equal(output[0].hits.total, 6);
+    });
+  });
+
   describe('Delete an Elasticsearch index test', () => {
     it('Should delete the test index', async () => {
       const output = await elastic.deleteIndex(indexName);
       assert.equal(output.acknowledged, true);
+
       return output;
     });
   });
 });
-
-/* POTENTIAL OR TEST
-it('Search', async () => {
-  const queries = [
-    { key: 'metadata.source', value: 'notudu', exact: true },
-    { key: 'message', value: 'test', exact: true }
-  ];
-  const output = await logger.search(queries);
-  console.log(output[0]);
-  assert.equal(output[0].hits.total, 3);
-});
-*/
