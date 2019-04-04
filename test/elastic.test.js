@@ -88,7 +88,6 @@ describe('Test Elasticsearch Transport functions', () => {
   describe('Elastic searching tests - basic', () => {
     before((done) => {
       setTimeout(() => {
-        // console.log('Test ISO: ', new Date('12/25 20:00').toISOString());
         done();
       }, 1500);
     });
@@ -104,7 +103,11 @@ describe('Test Elasticsearch Transport functions', () => {
 
       const output = await logger.search(query);
       const output2 = await logger.search(query2);
-      // console.log(output[0]);
+      /*
+      output[0].hits.hits.forEach((x) => {
+        console.log(x._source);
+      });
+      */
       assert.equal(output[0].hits.total, 6);
       assert.equal(output2[0].hits.total, 6);
     });
