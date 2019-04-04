@@ -197,13 +197,8 @@ describe('Test Elasticsearch Transport functions', () => {
         { key: 'message', value: 'test', exact: true },
         {
           or: [
-            { key: 'level', value: 'info' }, // Won't match with anything
-            {
-              and: [
-                { key: 'level', value: 'error' },
-                { key: 'message', value: 'test3', not: true },
-              ]
-            }
+            { key: 'level', value: 'error', and: true },
+            { key: 'message', value: 'test3', not: true, },
           ]
         }
       ];
@@ -215,8 +210,8 @@ describe('Test Elasticsearch Transport functions', () => {
 
   describe('Elastic searching tests - date range', () => {
     it('Search within a given time range and nest queries - should return 3', async () => {
-      const startTime = times1[0];
-      const endTime = times1[5];
+      const startTime = new Date('12/12/1999');
+      const endTime = Date.now();
 
       const query = [
         { time: { start: startTime, end: endTime } },

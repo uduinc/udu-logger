@@ -96,6 +96,8 @@ const logger = udu.createUduLogger({
   ]
 });
 ```
+The above logger will log to all three transports. Except logs that aren't a level of error will not log to the File transport.
+
 Of course, transports can also be instantiated separately. They can then be added to the logger like so.
 ```js
 const elastic = new udu.Transports.Elastic({
@@ -138,8 +140,65 @@ const query = [{ key: 'metadata.source', value: 'test', exact: true }];
 The source key is contained with the metadata object, so you must supply the full key for the query to work correctly.
 
 Queries can be given these optional parameters.
+
 | Name          | Default                     |  Description                                      |
 | ------------- | --------------------------- | --------------------------------------------------|
 | `exact`       | `false`                     | If true, query values must match the log exactly. |
 | 'and'         | `false`                     | If true, query value always match the log.        |
 | `not`         | `false`                     | If true, queries will not return matched values   |
+
+Here's a few more query examples.
+```js
+const query = [
+        { key: 'message', value: 'test', exact: false },
+        {
+          key: 'metadata.user',
+          value: 'Matthew',
+          exact: true,
+          and: true
+        }
+      ];
+// Will return all logs with the word "test" in message
+// but will only include logs that match "metadata.user" : Matthew
+```
+
+```js
+const query = [
+        { key: 'message', value: 'test', exact: false },
+        { key: 'metadata.user', value: 'Matthew', not: true }
+      ];
+// Will return all logs with the word "test" in message
+// but will excludes logs that contain "metadata.user" : Matthew
+```
+You can even nest your queries
+```js
+const query = [
+        { key: 'message', value: 'test', exact: true },
+        {
+          or: [
+            { key: 'level', value: 'error', and: true },
+            { key: 'message', value: 'test3', and: true, },
+          ]
+        }
+      ];
+// Will include logs containing "message" : "test"
+// OR will includes logs containing "level" : "error" but not "message" : "test3"
+```
+You can also search within a time range.
+```js
+const startTime = new Date('12/12/1999');
+      const endTime = Date.now();
+
+      const query = [
+        { time: { start: startTime, end: endTime } },
+        {
+          and: [
+            { key: 'level', value: 'error', },
+            { key: 'level', value: 'warning', },
+          ]
+        }
+      ];
+      const output = await logger.search(query);
+// Will return all logs from 12/12/1999 to now
+// BUT they must include "level" : "error" OR "level" : "warning"
+```
