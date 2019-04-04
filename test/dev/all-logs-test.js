@@ -6,17 +6,19 @@ const logger = udu.createUduLogger({
   logLimit: 50,
   logLimitLevel: 'warning',
   metadata: {
-    user: 'Matthew'
+    source: 'udu'
   },
   transports: [
     new udu.Transports.Console({
       level: 'error'
     }),
+    /*
     new udu.Transports.Elastic({
       host: '127.0.0.1:9200',
       index: 'engineers',
       type: '_doc',
     })
+    */
   ]
 });
 
@@ -43,9 +45,9 @@ const testAllLogs = async () => {
   logger.log(require('fs'));
   logger.log(JSON.stringify(require('fs'), null, 4));
 
-  logger.info('This is a simple object', { a: 1, b: 2 });
+  logger.error('This is a simple object', { a: 1, b: 2 });
   logger.warn('null =', null, 'and undefined =', undefined, '\n\tand true =', true, 'and NaN =', NaN);
-  const test = await logger.error('port:', 80);
+  const test = await logger.error({ metadata: { source: 'optional' } }, 'port:', 80);
   logger.log('abcdefghijklmnopqrstuvwxyz');
 
   console.log(test);
