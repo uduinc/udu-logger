@@ -115,7 +115,7 @@ logger.addTransport(elastic);
 ```
 
 ## Elastic Searching
-What makes `udu-logger` different from other logging solutions, is its ability to search for saved Elasticsearch logs. Querying for logs is easy.
+What set `udu-logger` apart from other logging solutions, is its ability to search for saved Elasticsearch logs. Querying for logs is easy.
 
 ```js
 const query = [{ key: 'message', value: 'test', exact: true }];
@@ -144,7 +144,7 @@ Queries can be given these optional parameters.
 | Name          | Default                     |  Description                                      |
 | ------------- | --------------------------- | --------------------------------------------------|
 | `exact`       | `false`                     | If true, query values must match the log exactly. |
-| 'and'         | `false`                     | If true, query value always match the log.        |
+| `and`         | `false`                     | If true, query value always match the log.        |
 | `not`         | `false`                     | If true, queries will not return matched values   |
 
 Here's a few more query examples.
@@ -158,16 +158,16 @@ const query = [
           and: true
         }
       ];
-// Will return all logs with the word "test" in message
+// Will return all logs containing "message" : "test"
 // but will only include logs that match "metadata.user" : Matthew
 ```
 
 ```js
 const query = [
-        { key: 'message', value: 'test', exact: false },
+        { key: 'message', value: 'test' },
         { key: 'metadata.user', value: 'Matthew', not: true }
       ];
-// Will return all logs with the word "test" in message
+// Will return all logs containing "message" : "test"
 // but will excludes logs that contain "metadata.user" : Matthew
 ```
 You can even nest your queries
@@ -187,18 +187,48 @@ const query = [
 You can also search within a time range.
 ```js
 const startTime = new Date('12/12/1999');
-      const endTime = Date.now();
+const endTime = Date.now();
 
-      const query = [
-        { time: { start: startTime, end: endTime } },
-        {
-          and: [
-            { key: 'level', value: 'error', },
-            { key: 'level', value: 'warning', },
-          ]
-        }
-      ];
-      const output = await logger.search(query);
+const query = [
+  { time: { start: startTime, end: endTime } },
+  {
+    and: [
+      { key: 'level', value: 'error', },
+      { key: 'level', value: 'warning', },
+    ]
+  }
+];
+const output = await logger.search(query);
 // Will return all logs from 12/12/1999 to now
 // BUT they must include "level" : "error" OR "level" : "warning"
 ```
+The start and end parameters are optional. If no start time is given, it will set the time to 24 hours ago. If no end time is given, it will set the time to current.
+
+Like the other queries, you can chain as many time queries together as you want. By default every query is treated as OR - it will return anything matching its condition, but not exclude logs that don't.
+
+## Other functions
+You can easily duplicate loggers by calling.
+```js
+const logger2 = logger.meta();
+```
+This will return a new logger with all of the same config and transports. You can also pass new metadata as parameters.
+
+```js
+
+const logger = udu.createUduLogger({
+  metadata: {
+    source: 'udu'
+  },
+  transports: [
+    new udu.Transports.Console({})
+  ]
+});
+logger.log('Data') // Outputs data with "metadata.source" : "udu"
+
+const logger2 = logger.meta({ source: 'notudu' });
+
+logger2.log('Data') // Outputs data with "metadata.source" : "notudu"
+```
+
+## Default Config
+Here is a table of all parameters you can instantiate a logger with.
