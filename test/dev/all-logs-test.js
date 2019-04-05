@@ -50,7 +50,12 @@ const testAllLogs = async () => {
   const test = await logger.error({ metadata: { source: 'optional' } }, 'port:', 80);
   logger.log('abcdefghijklmnopqrstuvwxyz');
 
+  const logger2 = logger.meta({ source: 'notudu' });
+
   console.log(test);
+
+  logger2.log('Test that level is the same');
+  logger2.error('Is the metadata the same?');
 };
 
 testAllLogs();

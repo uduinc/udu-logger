@@ -37,9 +37,9 @@ describe('Test Elasticsearch Transport functions', () => {
   const times2 = [];
   describe('Logging to Elasticsearch test', () => {
     beforeEach((done) => {
+      times1.push(new Date());
+      times2.push(moment().format(timeFormat2));
       setTimeout(() => {
-        times1.push(moment().format(timeFormat1));
-        times2.push(moment().format(timeFormat2));
         done();
       }, 100);
     });
@@ -210,7 +210,7 @@ describe('Test Elasticsearch Transport functions', () => {
 
   describe('Elastic searching tests - date range', () => {
     it('Search within a given time range and nest queries - should return 3', async () => {
-      const startTime = new Date('12/12/1999');
+      const startTime = times1[0];
       const endTime = Date.now();
 
       const query = [
@@ -226,8 +226,8 @@ describe('Test Elasticsearch Transport functions', () => {
 
       assert.equal(output[0].hits.total, 3);
     });
-    it('Search to current time if no end time given - should return 6', async () => {
-      const endTime = times1[5];
+    it('Search up to 1 day prior if no start time given - should return 6', async () => {
+      const endTime = Date.now();
 
       const query = [
         { time: { end: endTime } },
@@ -236,7 +236,7 @@ describe('Test Elasticsearch Transport functions', () => {
 
       assert.equal(output[0].hits.total, 6);
     });
-    it('Search up to 1 day prior if no start time given - should return 6', async () => {
+    it('Search to current time if no end time given - should return 6', async () => {
       const startTime = times1[0];
 
       const query = [
@@ -263,6 +263,34 @@ describe('Test Elasticsearch Transport functions', () => {
       const output = await logger.search(query);
 
       assert.equal(output[0].hits.total, 6);
+    });
+    it('Exclude a certain time range - should return 4', async () => {
+      const startTime = times1[2];
+      const endTime = times1[4];
+
+      const query = [
+        { time: { start: startTime, end: endTime, not: true } },
+      ];
+      const output = await logger.search(query);
+      console.log('Start time: ', times1[2]);
+      console.log('End time: ', times1[4]);
+      output[0].hits.hits.forEach((x) => {
+        console.log(x._source);
+      });
+      assert.equal(output[0].hits.total, 4);
+    });
+    it('Multiple time ranges - should return 3', async () => {
+      const query = [
+        { time: { end: times1[1] } },
+        { time: { start: times1[4], end: Date.now() } },
+      ];
+      const output = await logger.search(query);
+      console.log('Start time: ', times1[1]);
+      console.log('End time: ', times1[4]);
+      output[0].hits.hits.forEach((x) => {
+        console.log(x._source);
+      });
+      assert.equal(output[0].hits.total, 3);
     });
   });
 
