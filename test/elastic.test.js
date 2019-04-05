@@ -272,11 +272,7 @@ describe('Test Elasticsearch Transport functions', () => {
         { time: { start: startTime, end: endTime, not: true } },
       ];
       const output = await logger.search(query);
-      console.log('Start time: ', times1[2]);
-      console.log('End time: ', times1[4]);
-      output[0].hits.hits.forEach((x) => {
-        console.log(x._source);
-      });
+
       assert.equal(output[0].hits.total, 4);
     });
     it('Multiple time ranges - should return 3', async () => {
@@ -285,11 +281,7 @@ describe('Test Elasticsearch Transport functions', () => {
         { time: { start: times1[4], end: Date.now() } },
       ];
       const output = await logger.search(query);
-      console.log('Start time: ', times1[1]);
-      console.log('End time: ', times1[4]);
-      output[0].hits.hits.forEach((x) => {
-        console.log(x._source);
-      });
+
       assert.equal(output[0].hits.total, 3);
     });
   });
