@@ -29,11 +29,7 @@ You learned how to create a logger above. Logging data is easy. You can chain as
 ```js
 logger.log('data', 'more data', {a: 1, b: 2});
 ```
-Objects will be turned into strings. Multiple strings will be joined together by a space. Logs can also be supplied with additional metadata, must be supplied in the first argument.
-```js
-logger.error({ metadata: { source: 'optional' } }, 'port:', 80);
-```
-If optional metadata will overwrite the default metadata if the keys are the same.
+Objects will be turned into strings. Multiple strings will be joined together by a space.
 
 ## Log Structure
 Every logged output is an object and maintains the following structure.
