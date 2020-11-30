@@ -1,6 +1,6 @@
 {
   "name": "udu-logger",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "A simple logging package built for Elasticsearch",
   "main": "index.js",
   "directories": {
